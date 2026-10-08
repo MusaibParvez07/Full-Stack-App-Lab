@@ -1,0 +1,99 @@
+// Write a Node.js program using Express framework to accept User Name, Branch and Semester from a web page and display the information.
+Requirements:
+Handle both GET and POST methods.
+Branch should be underlined.
+Name should be bold.//
+----------------------------------------------------------------------------------------------------------------------------------------
+
+mkdir p2
+cd p2
+code .
+VsCode opens
+npm init -y
+npm install express
+
+p2/
+│
+├── server.js
+└── index.html
+
+// index.html
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Student Information</title>
+</head>
+
+<body>
+
+    <h2>Student Information Form</h2>
+
+    <form action="/student" method="POST">
+
+        <label>Name:</label>
+        <input type="text" name="name" required>
+        <br><br>
+
+        <label>Branch:</label>
+        <input type="text" name="branch" required>
+        <br><br>
+
+        <label>Semester:</label>
+        <input type="text" name="semester" required>
+        <br><br>
+
+        <button type="submit">Submit</button>
+
+    </form>
+
+</body>
+</html>
+
+// server.js
+const express = require("express");
+const path = require("path");
+
+const app = express();
+
+app.use(express.urlencoded({ extended: true }));
+
+app.get("/", (req, res) => {
+    res.sendFile(path.join(__dirname, "index.html"));
+});
+
+app.post("/student", (req, res) => {
+
+    const name = req.body.name;
+    const branch = req.body.branch;
+    const semester = req.body.semester;
+
+    res.send(`
+        <html>
+        <head>
+            <title>Student Information</title>
+        </head>
+
+        <body>
+
+            <h2>Student Information</h2>
+
+            <p>Name: <b>${name}</b></p>
+
+            <p>Branch: <u>${branch}</u></p>
+
+            <p>Semester: ${semester}</p>
+
+            <br>
+
+            <a href="/">Go Back</a>
+
+        </body>
+        </html>
+    `);
+});
+
+app.listen(3000, () => {
+    console.log("Server running at http://localhost:3000");
+});
+
+node server.js

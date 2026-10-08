@@ -1,0 +1,112 @@
+// Demonstrate Node. Js Application to perform CRUD operation for online Book Cart
+----------------------------------------------------------------------------------
+
+mkdir p1
+cd p1
+code .
+
+opens Vscode
+open new terminal
+
+npm init -y
+npm install express
+
+p1/
+│
+├── node_modules/
+├── package.json
+├── package-lock.json
+└── server.js
+
+// server.js
+const express = require("express");
+const app = express();
+
+app.use(express.json());
+
+let books = [
+    {
+        id: 1,
+        title: "The Alchemist",
+        author: "Paulo Coelho",
+        price: 300
+    },
+    {
+        id: 2,
+        title: "Atomic Habits",
+        author: "James Clear",
+        price: 500
+    }
+];
+
+app.get("/", (req, res) => {
+    res.send("Welcome to Online Book Cart");
+});
+
+
+app.get("/books", (req, res) => {
+    res.json(books);
+});
+
+app.get("/books/:id", (req, res) => {
+    const id = parseInt(req.params.id);
+
+    const book = books.find(book => book.id === id);
+
+    if (!book) {
+        return res.status(404).send("Book not found");
+    }
+
+    res.json(book);
+});
+
+app.post("/books", (req, res) => {
+    const newBook = {
+        id: books.length + 1,
+        title: req.body.title,
+        author: req.body.author,
+        price: req.body.price
+    };
+
+    books.push(newBook);
+
+    res.status(201).json(newBook);
+});
+
+
+app.put("/books/:id", (req, res) => {
+    const id = parseInt(req.params.id);
+
+    const book = books.find(book => book.id === id);
+
+    if (!book) {
+        return res.status(404).send("Book not found");
+    }
+
+    book.title = req.body.title;
+    book.author = req.body.author;
+    book.price = req.body.price;
+
+    res.json(book);
+});
+
+app.delete("/books/:id", (req, res) => {
+    const id = parseInt(req.params.id);
+
+    const index = books.findIndex(book => book.id === id);
+
+    if (index === -1) {
+        return res.status(404).send("Book not found");
+    }
+
+    books.splice(index, 1);
+
+    res.send("Book deleted successfully");
+});
+
+app.listen(3000, () => {
+    console.log("Server running at http://localhost:3000");
+});
+
+node server.js
+Use postman to demonstrate get, post, put & delete.

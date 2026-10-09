@@ -23,27 +23,60 @@ p2/
 <head>
     <title>Student Information</title>
 </head>
+<body style="background-color:aqua; font-family:Arial;">
 
-<body>
+    <h2 style="text-align:center;">Student Information Form</h2>
 
-    <h2>Student Information Form</h2>
+    <form action="/student" method="GET">
+        <table align="center" bgcolor="white" cellpadding="10">
+            <tr>
+                <td>Name:</td>
+                <td><input type="text" name="name" required></td>
+            </tr>
+
+            <tr>
+                <td>Branch:</td>
+                <td><input type="text" name="branch" required></td>
+            </tr>
+
+            <tr>
+                <td>Semester:</td>
+                <td><input type="text" name="semester" required></td>
+            </tr>
+
+            <tr>
+                <td colspan="2" align="center">
+                    <button type="submit">Submit using GET</button>
+                </td>
+            </tr>
+        </table>
+    </form>
+
+    <br>
 
     <form action="/student" method="POST">
+        <table align="center" bgcolor="white" cellpadding="10">
+            <tr>
+                <td>Name:</td>
+                <td><input type="text" name="name" required></td>
+            </tr>
 
-        <label>Name:</label>
-        <input type="text" name="name" required>
-        <br><br>
+            <tr>
+                <td>Branch:</td>
+                <td><input type="text" name="branch" required></td>
+            </tr>
 
-        <label>Branch:</label>
-        <input type="text" name="branch" required>
-        <br><br>
+            <tr>
+                <td>Semester:</td>
+                <td><input type="text" name="semester" required></td>
+            </tr>
 
-        <label>Semester:</label>
-        <input type="text" name="semester" required>
-        <br><br>
-
-        <button type="submit">Submit</button>
-
+            <tr>
+                <td colspan="2" align="center">
+                    <button type="submit">Submit using POST</button>
+                </td>
+            </tr>
+        </table>
     </form>
 
 </body>
@@ -57,36 +90,44 @@ const app = express();
 
 app.use(express.urlencoded({ extended: true }));
 
+// Display the student form
 app.get("/", (req, res) => {
     res.sendFile(path.join(__dirname, "index.html"));
 });
 
-app.post("/student", (req, res) => {
+// GET method
+app.get("/student", (req, res) => {
+    const name = req.query.name;
+    const branch = req.query.branch;
+    const semester = req.query.semester;
 
+    res.send(`
+        <html>
+        <body style="background-color:lightyellow; font-family:Arial;">
+            <h2>Student Information - GET Method</h2>
+            <p>Name: <b>${name}</b></p>
+            <p>Branch: <b>${branch}</b></p>
+            <p>Semester: <b>${semester}</b></p>
+            <a href="/">Go Back</a>
+        </body>
+        </html>
+    `);
+});
+
+// POST method
+app.post("/student", (req, res) => {
     const name = req.body.name;
     const branch = req.body.branch;
     const semester = req.body.semester;
 
     res.send(`
         <html>
-        <head>
-            <title>Student Information</title>
-        </head>
-
-        <body>
-
-            <h2>Student Information</h2>
-
+        <body style="background-color:lightgreen; font-family:Arial;">
+            <h2>Student Information - POST Method</h2>
             <p>Name: <b>${name}</b></p>
-
-            <p>Branch: <u>${branch}</u></p>
-
-            <p>Semester: ${semester}</p>
-
-            <br>
-
+            <p>Branch: <b>${branch}</b></p>
+            <p>Semester: <b>${semester}</b></p>
             <a href="/">Go Back</a>
-
         </body>
         </html>
     `);

@@ -1,0 +1,278 @@
+// To design and implement a resume for a job aspirant using React Class Components and Functional Components, and style the resume using CSS.
+Technologies used
+- React.js: To create reusable UI components.
+- JavaScript: To implement component logic.
+- HTML/JSX: To structure the resume.
+- CSS: To style the resume.
+- Node.js and npm/npx: To create and run the React project.
+----------------------------------------------------------------------------------------------------------------------------------------------
+
+npx create-react-app resume-app
+cd resume-app
+code .
+
+src/
+├── ResumeCreate/
+│   ├── Resume_Header.js
+│   ├── Resume_Person_Info.js
+│   └── Educational.js
+├── App.js
+├── index.js
+└── index.css
+-----------------------------
+
+src/Resume_Header.js
+import React from "react";
+class Resume_Header extends React.Component {
+  render() {
+    return (
+      <div className="resume-header">
+        <h1>RESUME</h1>
+        <p>Full Stack Developer | MCA Student</p>
+      </div>
+    );
+  }
+}
+
+export default Resume_Header;
+
+src/Resume_Person_Info.js
+import React from "react";
+
+class Resume_Person_Info extends React.Component {
+  render() {
+    return (
+      <div className="person-info">
+        <h2>Personal Information</h2>
+
+        <div>
+          <b>Name:</b>
+          <p>Musaib Parveez</p>
+        </div>
+
+        <div>
+          <b>Address:</b>
+          <p>Bengaluru, Karnataka</p>
+        </div>
+
+        <div>
+          <b>Phone No:</b>
+          <p>9876543210</p>
+        </div>
+
+        <div>
+          <b>Email ID:</b>
+          <p>musaib@example.com</p>
+        </div>
+      </div>
+    );
+  }
+}
+
+export default Resume_Person_Info;
+
+
+src/Educational.js
+import React from "react";
+
+class EdTable extends React.Component {
+  render() {
+    const education = [
+      {
+        id: 1,
+        name: "RV College of Engineering",
+        place: "Bengaluru",
+        stddeg: "MCA",
+        grade: "Pursuing",
+      },
+      {
+        id: 2,
+        name: "Graduation College",
+        place: "Karnataka",
+        stddeg: "Bachelor's Degree",
+        grade: "Completed",
+      },
+      {
+        id: 3,
+        name: "Higher Secondary School",
+        place: "Karnataka",
+        stddeg: "12th",
+        grade: "Completed",
+      },
+    ];
+
+    const edudetails = education.map((educ) => (
+      <EdRow
+        key={educ.id}
+        id={educ.id}
+        name={educ.name}
+        place={educ.place}
+        stddeg={educ.stddeg}
+        grade={educ.grade}
+      />
+    ));
+
+    return (
+      <table>
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Institution</th>
+            <th>Place</th>
+            <th>Education</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+
+        <tbody>{edudetails}</tbody>
+      </table>
+    );
+  }
+}
+
+class EdRow extends React.Component {
+  render() {
+    return (
+      <tr>
+        <td>{this.props.id}</td>
+        <td>{this.props.name}</td>
+        <td>{this.props.place}</td>
+        <td>{this.props.stddeg}</td>
+        <td>{this.props.grade}</td>
+      </tr>
+    );
+  }
+}
+
+class Education extends React.Component {
+  render() {
+    return (
+      <section className="education">
+        <h2>Educational Qualifications</h2>
+        <EdTable />
+      </section>
+    );
+  }
+}
+
+export default Education;
+
+src/index.js
+import React from "react";
+import ReactDOM from "react-dom/client";
+import "./index.css";
+
+import Resume_Header from "./ResumeCreate/Resume_Header";
+import Resume_Person_Info from "./ResumeCreate/Resume_Person_Info";
+import Education from "./ResumeCreate/Educational";
+
+const root = ReactDOM.createRoot(document.getElementById("root"));
+
+root.render(
+  <React.StrictMode>
+    <div className="resume-container">
+      <Resume_Header />
+      <Resume_Person_Info />
+      <Education />
+    </div>
+  </React.StrictMode>
+);
+
+src/index.css
+body {
+  margin: 0;
+  padding: 20px;
+  background-color: #eef2f7;
+  font-family: Arial, sans-serif;
+  color: #333;
+}
+
+.resume-container {
+  max-width: 900px;
+  margin: 20px auto;
+  background-color: white;
+  padding: 30px;
+  border-radius: 12px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.12);
+}
+
+.resume-header {
+  text-align: center;
+  background-color: #243b55;
+  color: white;
+  padding: 20px;
+  border-radius: 8px;
+}
+
+.resume-header h1 {
+  margin: 0;
+  letter-spacing: 3px;
+}
+
+.resume-header p {
+  margin-bottom: 0;
+}
+
+.person-info,
+.education {
+  margin-top: 25px;
+}
+
+h2 {
+  color: #243b55;
+  border-bottom: 2px solid #243b55;
+  padding-bottom: 8px;
+}
+
+.person-info div {
+  margin: 12px 0;
+}
+
+.person-info p {
+  display: inline;
+  margin-left: 10px;
+}
+
+table {
+  width: 100%;
+  margin-top: 15px;
+  border-collapse: collapse;
+}
+
+th,
+td {
+  border: 1px solid #d5dce5;
+  padding: 12px;
+  text-align: left;
+}
+
+th {
+  background-color: #243b55;
+  color: white;
+}
+
+tbody tr:nth-child(even) {
+  background-color: #f2f6fa;
+}
+
+tbody tr:hover {
+  background-color: #e2ebf5;
+}
+
+@media (max-width: 600px) {
+  .resume-container {
+    padding: 15px;
+  }
+
+  table {
+    font-size: 12px;
+  }
+
+  th,
+  td {
+    padding: 7px;
+  }
+}
+
+npm start
+to run the React App (Resume)

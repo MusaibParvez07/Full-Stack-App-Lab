@@ -1,0 +1,306 @@
+// Build student registration portal using Entities like component, state and props.
+------------------------------------------------------------------------------------
+
+mkdir p4
+cd p4
+npx create-react-app student-registration
+cd student-registration
+code .
+
+src/
+├── StudentListTable.js
+├── index.js
+├── index.css
+└── App.js
+-----------------------
+
+src/StudentListTable.js
+
+import React from "react";
+import "./index.css";
+
+// Initial student data
+const studlist = [
+  { slno: 1, name: "Rahul Sharma", usn: "1RVCE01", tmarks: 150 },
+  { slno: 2, name: "Priya Kumar", usn: "1RVCE02", tmarks: 145 }
+];
+
+// Component 1: Displays one student row
+class StudentRow extends React.Component {
+  render() {
+    const studl = this.props.studli;
+
+    return (
+      <tr>
+        <td>{studl.slno}</td>
+        <td>{studl.name}</td>
+        <td>{studl.usn}</td>
+        <td>{studl.tmarks}</td>
+      </tr>
+    );
+  }
+}
+
+// Component 2: Displays the student table
+class StudentsTable extends React.Component {
+  render() {
+    const studrows = this.props.studlist.map((studli) => (
+      <StudentRow key={studli.slno} studli={studli} />
+    ));
+
+    return (
+      <div className="table-container">
+        <h2>Registered Students</h2>
+
+        <table>
+          <thead>
+            <tr>
+              <th>S1 No.</th>
+              <th>Student Name</th>
+              <th>USN</th>
+              <th>Total Marks</th>
+            </tr>
+          </thead>
+          <tbody>{studrows}</tbody>
+        </table>
+      </div>
+    );
+  }
+}
+
+// Component 3: Student registration form
+class StudentAddSubmit extends React.Component {
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      name: "",
+      usn: "",
+      tmarks: ""
+    };
+  }
+
+  handleSubmit = (e) => {
+    e.preventDefault();
+
+    const studli = {
+      name: this.state.name,
+      usn: this.state.usn,
+      tmarks: this.state.tmarks
+    };
+
+    this.props.CreateStudentAdd(studli);
+
+    this.setState({
+      name: "",
+      usn: "",
+      tmarks: ""
+    });
+  };
+
+  render() {
+    return (
+      <div className="form-container">
+        <h2>Student Registration Form</h2>
+
+        <form onSubmit={this.handleSubmit}>
+          <input
+            type="text"
+            placeholder="Student Name"
+            value={this.state.name}
+            onChange={(e) => this.setState({ name: e.target.value })}
+            required
+          />
+
+          <input
+            type="text"
+            placeholder="USN"
+            value={this.state.usn}
+            onChange={(e) => this.setState({ usn: e.target.value })}
+            required
+          />
+
+          <input
+            type="number"
+            placeholder="Total Marks"
+            min="0"
+            value={this.state.tmarks}
+            onChange={(e) => this.setState({ tmarks: e.target.value })}
+            required
+          />
+
+          <button type="submit">Register Student</button>
+        </form>
+      </div>
+    );
+  }
+}
+
+// Component 4: Main component manages student state
+class StudentListTable extends React.Component {
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      newStudList: studlist
+    };
+  }
+
+  CreateStudentAdd = (studli) => {
+    const studlength = this.state.newStudList.length + 1;
+
+    const newStudent = {
+      ...studli,
+      slno: studlength
+    };
+
+    this.setState({
+      newStudList: [...this.state.newStudList, newStudent]
+    });
+  };
+
+  render() {
+    return (
+      <div className="portal">
+        <header className="portal-header">
+          <h1>Student Registration Portal</h1>
+          <p>Register and manage student records</p>
+        </header>
+
+        <StudentAddSubmit
+          CreateStudentAdd={this.CreateStudentAdd}
+        />
+
+        <StudentsTable studlist={this.state.newStudList} />
+      </div>
+    );
+  }
+}
+
+export default StudentListTable;
+
+
+src/index.js
+
+import React from "react";
+import ReactDOM from "react-dom/client";
+import "./index.css";
+import StudentListTable from "./StudentListTable";
+
+const root = ReactDOM.createRoot(
+  document.getElementById("root")
+);
+
+root.render(
+  <React.StrictMode>
+    <StudentListTable />
+  </React.StrictMode>
+);
+
+
+src/index.css
+
+body {
+  margin: 0;
+  padding: 20px;
+  font-family: Arial, sans-serif;
+  background: #eef2f7;
+  color: #333;
+}
+
+.portal {
+  max-width: 900px;
+  margin: 20px auto;
+}
+
+.portal-header {
+  text-align: center;
+  padding: 22px;
+  background: #243b55;
+  color: white;
+  border-radius: 10px;
+}
+
+.portal-header h1 {
+  margin: 0 0 10px;
+}
+
+.form-container,
+.table-container {
+  background: white;
+  margin-top: 22px;
+  padding: 22px;
+  border-radius: 10px;
+  box-shadow: 0 3px 10px #d5dce5;
+}
+
+h2 {
+  color: #243b55;
+}
+
+form {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+input {
+  flex: 1;
+  min-width: 150px;
+  padding: 12px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+button {
+  padding: 12px 18px;
+  background: #243b55;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+button:hover {
+  background: #365b80;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 15px;
+}
+
+th,
+td {
+  padding: 12px;
+  border: 1px solid #ddd;
+  text-align: left;
+}
+
+th {
+  background: #243b55;
+  color: white;
+}
+
+tbody tr:nth-child(even) {
+  background: #f0f4f8;
+}
+
+@media (max-width: 600px) {
+  body {
+    padding: 10px;
+  }
+
+  .form-container,
+  .table-container {
+    padding: 12px;
+    overflow-x: auto;
+  }
+
+  table {
+    min-width: 450px;
+  }
+}
+
+npm start (to start the program)

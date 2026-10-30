@@ -1,0 +1,187 @@
+// React Form with Regular Expression Validation. Name password and email.
+
+src/RegistrationForm.js
+
+import React from "react";
+import "./index.css";
+
+class RegistrationForm extends React.Component {
+
+  state = {
+    name: "",
+    email: "",
+    password: "",
+    errors: {}
+  };
+
+  // Validate form fields
+  validate = () => {
+    const errors = {};
+
+    if (!this.state.name) {
+      errors.name = "Name is required";
+    }
+    else if (this.state.name.length < 3) {
+      errors.name = "Name must be at least 3 letters";
+    }
+
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+    if (!this.state.email) {
+      errors.email = "Email is required";
+    }
+    else if (!emailRegex.test(this.state.email)) {
+      errors.email = "Email is invalid";
+    }
+
+    if (!this.state.password) {
+      errors.password = "Password is required";
+    }
+    else if (this.state.password.length < 8) {
+      errors.password = "Password must be at least 8 characters";
+    }
+
+    this.setState({ errors });
+
+    return Object.keys(errors).length === 0;
+  };
+
+  // Handle input changes
+  handleChange = (e) => {
+    this.setState({
+      [e.target.name]: e.target.value
+    });
+  };
+
+  // Handle form submission
+  handleSubmit = (e) => {
+    e.preventDefault();
+
+    if (this.validate()) {
+      alert("Registration Successful!");
+
+      this.setState({
+        name: "",
+        email: "",
+        password: "",
+        errors: {}
+      });
+    }
+  };
+
+  render() {
+    return (
+      <div className="form-container">
+
+        <h1>Registration Form for User Input</h1>
+
+        <form onSubmit={this.handleSubmit}>
+
+          <input
+            type="text"
+            name="name"
+            placeholder="Name"
+            value={this.state.name}
+            onChange={this.handleChange}
+          />
+          <p className="error">{this.state.errors.name}</p>
+
+          <input
+            type="text"
+            name="email"
+            placeholder="Email"
+            value={this.state.email}
+            onChange={this.handleChange}
+          />
+          <p className="error">{this.state.errors.email}</p>
+
+          <input
+            type="password"
+            name="password"
+            placeholder="Password"
+            value={this.state.password}
+            onChange={this.handleChange}
+          />
+          <p className="error">{this.state.errors.password}</p>
+
+          <button type="submit">Register</button>
+
+        </form>
+      </div>
+    );
+  }
+}
+
+export default RegistrationForm;
+
+src/app.js
+
+import React from "react";
+import RegistrationForm from "./RegistrationForm";
+
+function App() {
+  return (
+    <div>
+      <RegistrationForm />
+    </div>
+  );
+}
+
+export default App;
+
+
+src/index.css
+
+body {
+  margin: 0;
+  padding: 20px;
+  font-family: Arial, sans-serif;
+  background-color: #eef2f7;
+}
+
+.form-container {
+  max-width: 650px;
+  margin: 60px auto;
+  padding: 30px;
+  background-color: white;
+  border: 1px solid #ccc;
+  border-radius: 10px;
+  box-shadow: 0 4px 12px #ddd;
+}
+
+h1 {
+  color: #243b55;
+  text-align: center;
+  font-size: 25px;
+}
+
+form {
+  margin-top: 25px;
+}
+
+input {
+  width: 95%;
+  padding: 12px;
+  margin-top: 10px;
+  border: 1px solid #aaa;
+  border-radius: 5px;
+}
+
+.error {
+  color: red;
+  font-size: 13px;
+  margin: 5px 0 12px;
+}
+
+button {
+  padding: 12px 25px;
+  background-color: #243b55;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+button:hover {
+  background-color: #365b80;
+}

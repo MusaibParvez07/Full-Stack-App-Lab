@@ -13,17 +13,17 @@ code .
 
 src/
 ├── ResumeCreate/
-│   ├── Resume_Header.js
-│   ├── Resume_Person_Info.js
+│   ├── ResumeHeader.js
+│   ├── ResumePersonInfo.js
 │   └── Educational.js
 ├── App.js
 ├── index.js
 └── index.css
 -----------------------------
 
-src/Resume_Header.js
+src/ResumeHeader.js
 import React from "react";
-class Resume_Header extends React.Component {
+class ResumeHeader extends React.Component {
   render() {
     return (
       <div className="resume-header">
@@ -34,12 +34,12 @@ class Resume_Header extends React.Component {
   }
 }
 
-export default Resume_Header;
+export default ResumeHeader;
 
-src/Resume_Person_Info.js
+src/ResumePersonInfo.js
 import React from "react";
 
-class Resume_Person_Info extends React.Component {
+class ResumePersonInfo extends React.Component {
   render() {
     return (
       <div className="person-info">
@@ -69,7 +69,7 @@ class Resume_Person_Info extends React.Component {
   }
 }
 
-export default Resume_Person_Info;
+export default ResumePersonInfo;
 
 
 src/Educational.js
@@ -144,7 +144,7 @@ class EdRow extends React.Component {
   }
 }
 
-class Education extends React.Component {
+class Educational extends React.Component {
   render() {
     return (
       <section className="education">
@@ -155,25 +155,25 @@ class Education extends React.Component {
   }
 }
 
-export default Education;
+export default Educational;
 
 src/index.js
 import React from "react";
 import ReactDOM from "react-dom/client";
 import "./index.css";
 
-import Resume_Header from "./ResumeCreate/Resume_Header";
-import Resume_Person_Info from "./ResumeCreate/Resume_Person_Info";
-import Education from "./ResumeCreate/Educational";
+import Resume_Header from "./ResumeHeader";
+import Resume_Person_Info from "./ResumePersonInfo";
+import Education from "./Educational";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 
 root.render(
   <React.StrictMode>
     <div className="resume-container">
-      <Resume_Header />
-      <Resume_Person_Info />
-      <Education />
+      <ResumeHeader />
+      <ResumePersonInfo />
+      <Educational />
     </div>
   </React.StrictMode>
 );

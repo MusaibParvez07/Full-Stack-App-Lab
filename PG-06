@@ -1,0 +1,309 @@
+// Deploy connectivity between React and Node Application for Inventory Management System
+1. Backend: Node.js + Express — manages inventory data
+2. Frontend: React — displays inventory and allows users to add products.//
+-----------------------------------------------------------------------------------------
+
+mkdir PG6
+cd PG6
+mkdir inventory-backend inventory-frontend
+code .
+
+Folder Structure inside vs
+PG6/
+│
+├── inventory-backend/
+│
+└── inventory-frontend/
+
+open terminal inside vscode
+cd inventory-backend
+npm init -y
+npm install express cors
+
+create a backend file named myinventory.js
+
+const express = require("express");
+const cors = require("cors");
+
+const app = express();
+
+app.use(cors());
+app.use(express.json());
+
+// Initial inventory data
+let inventory = [
+  { id: 1, productname: "product1", quantity: 12, price: 12 },
+  { id: 2, productname: "product2", quantity: 1, price: 13 },
+  { id: 3, productname: "product3", quantity: 10, price: 14 },
+  { id: 4, productname: "product4", quantity: 19, price: 16 }
+];
+
+// GET API - Display all products
+app.get("/", (req, res) => {
+  res.json(inventory);
+});
+
+// POST API - Add a new product
+app.post("/add", (req, res) => {
+  const newProduct = {
+    id: inventory.length + 1,
+    productname: req.body.productname,
+    quantity: Number(req.body.quantity),
+    price: Number(req.body.price)
+  };
+
+  inventory.push(newProduct);
+
+  res.json({
+    message: "Product added successfully",
+    product: newProduct
+  });
+});
+
+// Start backend server
+app.listen(8000, () => {
+  console.log("Inventory server running on port 8000");
+});
+
+Run backend using: node myinventory.js
+
+open second terminal in vscode
+npx create-react-app inventory-frontend
+cd inventory-frontend
+npm install axios
+
+src/App.js
+
+import React, { Component } from "react";
+import axios from "axios";
+import "./App.css";
+
+const API = "http://localhost:8000";
+
+// Component 1: Display Inventory
+class Display_Inventory extends Component {
+  render() {
+    return (
+      <div>
+        <h2>Inventory Management</h2>
+
+        <table>
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Product Name</th>
+              <th>Quantity</th>
+              <th>Price</th>
+            </tr>
+          </thead>
+
+          <tbody>
+            {this.props.inventory.map((item) => (
+              <tr key={item.id}>
+                <td>{item.id}</td>
+                <td>{item.productname}</td>
+                <td>{item.quantity}</td>
+                <td>{item.price}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    );
+  }
+}
+
+// Component 2: Add Inventory
+class AddInventory extends Component {
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      productname: "",
+      quantity: "",
+      price: ""
+    };
+  }
+
+  handleSubmit = async (e) => {
+    e.preventDefault();
+
+    try {
+      await axios.post(API + "/add", this.state);
+
+      alert("Product added successfully!");
+
+      this.setState({
+        productname: "",
+        quantity: "",
+        price: ""
+      });
+
+      this.props.refreshInventory();
+    } catch (error) {
+      alert("Error adding product");
+    }
+  };
+
+  render() {
+    return (
+      <div>
+        <h2>Inventory Management</h2>
+
+        <form onSubmit={this.handleSubmit}>
+          <input
+            type="text"
+            placeholder="Product Name"
+            value={this.state.productname}
+            onChange={(e) =>
+              this.setState({ productname: e.target.value })
+            }
+            required
+          />
+
+          <input
+            type="number"
+            placeholder="Quantity"
+            value={this.state.quantity}
+            onChange={(e) =>
+              this.setState({ quantity: e.target.value })
+            }
+            required
+          />
+
+          <input
+            type="number"
+            placeholder="Price"
+            value={this.state.price}
+            onChange={(e) =>
+              this.setState({ price: e.target.value })
+            }
+            required
+          />
+
+          <button type="submit">Submit</button>
+        </form>
+      </div>
+    );
+  }
+}
+
+// Main Component
+class App extends Component {
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      inventory: []
+    };
+  }
+
+  // Fetch inventory from backend
+  getInventory = async () => {
+    try {
+      const response = await axios.get(API);
+      this.setState({ inventory: response.data });
+    } catch (error) {
+      console.log("Error fetching inventory", error);
+    }
+  };
+
+  componentDidMount() {
+    this.getInventory();
+  }
+
+  render() {
+    return (
+      <div className="container">
+        <h1>Inventory Management System</h1>
+
+        <Display_Inventory
+          inventory={this.state.inventory}
+        />
+
+        <AddInventory
+          refreshInventory={this.getInventory}
+        />
+      </div>
+    );
+  }
+}
+
+export default App;
+
+src/App.css
+
+body {
+  margin: 0;
+  padding: 20px;
+  font-family: Arial, sans-serif;
+  background: #eef2f7;
+}
+
+.container {
+  max-width: 850px;
+  margin: 30px auto;
+  padding: 25px;
+  background: white;
+  border-radius: 10px;
+  box-shadow: 0 3px 12px #ccc;
+}
+
+h1 {
+  text-align: center;
+  color: #243b55;
+}
+
+h2 {
+  color: #243b55;
+  margin-top: 25px;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 15px;
+}
+
+th, td {
+  padding: 12px;
+  border: 1px solid #ddd;
+  text-align: center;
+}
+
+th {
+  background: #243b55;
+  color: white;
+}
+
+tr:nth-child(even) {
+  background: #f2f5f8;
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+input {
+  padding: 12px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+button {
+  padding: 12px;
+  background: #243b55;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+button:hover {
+  background: #365b80;
+}
+
+Run the frontend using: npm start
+at http://localhost:3000

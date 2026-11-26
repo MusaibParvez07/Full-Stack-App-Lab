@@ -28,8 +28,7 @@ Inside PG9, create a file named db.json
 Open the terminal inside VS Code and execute:
 npx json-server --watch db.json --port 5000
 
-Keep the backend terminal running. Open a new terminal in VS Code and move one folder back.
-cd ..
+Keep the backend terminal running. Open a new terminal in VScode.
 npx create-react-app employee-client
 cd employee-client
 npm install axios
